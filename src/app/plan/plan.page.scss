@@ -1,0 +1,23 @@
+ion-grid{
+  border-style: solid;
+  border-width: 3px;
+  --ion-grid-column-padding: 0px;
+  --ion-grid-inner-padding: 0px;
+  padding: 0;
+  margin: 50px;
+}
+
+ion-col{
+  border-width: 1px;
+  border-style: solid;
+  border-color: #1c1c1d;
+  margin: 0;
+}
+
+ion-row{
+  margin: -1px;
+}
+
+img{
+  width: 50px;
+}

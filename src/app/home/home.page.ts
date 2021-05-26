@@ -10,7 +10,8 @@ import {ActivatedRoute} from "@angular/router";
 export class HomePage {
 
   IDPlanova: number[];
- serija: string = 'neutral';
+  serija: string = 'neutral';
+  plan: string = 'neutral';
 
   constructor(private planServis: PlanoviService, private route: ActivatedRoute) {
 
@@ -18,7 +19,7 @@ export class HomePage {
 
   ngOnInit(): void {
    this.serija = this.route.snapshot.queryParams.serija;
-   console.log(this.serija);
+   this.plan = this.route.snapshot.queryParams.plan;
   }
 
 }

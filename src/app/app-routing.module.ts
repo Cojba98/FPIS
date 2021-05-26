@@ -19,6 +19,14 @@ const routes: Routes = [
     path: 'nova-serija',
     loadChildren: () => import('./nova-serija/nova-serija.module').then( m => m.NovaSerijaPageModule)
   },
+  {
+    path: 'novi-plan',
+    loadChildren: () => import('./novi-plan/novi-plan.module').then( m => m.NoviPlanPageModule)
+  },
+  {
+    path: 'plan',
+    loadChildren: () => import('./plan/plan.module').then( m => m.PlanPageModule)
+  },
 ];
 
 @NgModule({

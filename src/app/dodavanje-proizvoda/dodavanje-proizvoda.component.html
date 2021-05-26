@@ -1,0 +1,34 @@
+<ion-content>
+  <ion-grid>
+    <form #DodavanjeForm = "ngForm" (ngSubmit)="dodajProizvod()">
+      <ion-row>
+        <ion-col size="12">
+<ion-label>Izaberite proizvod:</ion-label>
+<ion-select [(ngModel)]="idProizvoda" name="proizvod" required (ionChange)="postaviProizvod()">
+  <ion-select-option *ngFor="let proizvod of proizvodi" value="{{proizvod.IDArtikla}}">{{proizvod.nazivArtikla}}</ion-select-option>
+</ion-select>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+<ion-label>Izaberite nalepnicu:</ion-label>
+<ion-select [(ngModel)]="idNalepnice" name="nalepnica" required (ionChange)="postaviNalepnicu()">
+  <ion-select-option *ngFor="let nalepnica of nalepnice" value="{{nalepnica.IDNalepnice}}">{{nalepnica.opis}}</ion-select-option>
+</ion-select>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="12">
+<ion-label>Unesite kolicinu:</ion-label>
+<ion-input placeholder="Kolicina" [(ngModel)]="kolicina" name="kolicina" required (change)="postaviKolicinu()"></ion-input>
+        </ion-col>
+      </ion-row>
+<ion-row class="ion-justify-content-center">
+<ion-buttons>
+<ion-button type="submit" color="primary" [style]="{'border-color':'#3a7be0'}" [disabled]="DodavanjeForm.invalid">Dodaj proizvod</ion-button>
+  <ion-button color="danger" [style]="{'border-color':'#e04055'}" (click)="zatvoriFormu()">Napusti</ion-button>
+</ion-buttons>
+</ion-row>
+    </form>
+  </ion-grid>
+</ion-content>
