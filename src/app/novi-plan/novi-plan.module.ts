@@ -8,6 +8,7 @@ import { NoviPlanPageRoutingModule } from './novi-plan-routing.module';
 
 import { NoviPlanPage } from './novi-plan.page';
 import {DodavanjeProizvodaComponent} from "../dodavanje-proizvoda/dodavanje-proizvoda.component";
+import {IzmenaProizvodaComponent} from "../izmena-proizvoda/izmena-proizvoda.component";
 
 @NgModule({
   imports: [
@@ -16,7 +17,7 @@ import {DodavanjeProizvodaComponent} from "../dodavanje-proizvoda/dodavanje-proi
     IonicModule,
     NoviPlanPageRoutingModule
   ],
-  declarations: [NoviPlanPage, DodavanjeProizvodaComponent],
-  entryComponents: [DodavanjeProizvodaComponent ]
+  declarations: [NoviPlanPage, DodavanjeProizvodaComponent, IzmenaProizvodaComponent],
+  entryComponents: [DodavanjeProizvodaComponent, IzmenaProizvodaComponent ]
 })
 export class NoviPlanPageModule {}

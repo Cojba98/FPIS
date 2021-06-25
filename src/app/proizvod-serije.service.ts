@@ -33,12 +33,7 @@ export class ProizvodSerijeService {
     let url = environment.apiUrl + 'serija/proizvod?';
     url += "IDArtikla="+ IDArtikla;
     url+="&IDNalepnice="+IDNalepnice;
-    return this.http.delete(url).subscribe(() =>{
-      console.log("Uspesno ubaceno")
-    }, error => {
-      console.log("Greska");
-    })
-    console.log("POST zahtev poslat");
+    return this.http.delete(url);
 
   }
 }

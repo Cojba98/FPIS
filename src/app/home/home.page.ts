@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {AfterContentInit, AfterViewInit, Component, DoCheck, Input, OnChanges} from '@angular/core';
 import {PlanoviService} from '../planovi.service';
 import {ActivatedRoute} from "@angular/router";
 
@@ -18,8 +18,15 @@ export class HomePage {
   }
 
   ngOnInit(): void {
-   this.serija = this.route.snapshot.queryParams.serija;
-   this.plan = this.route.snapshot.queryParams.plan;
+
   }
+
+  ionViewWillEnter() {
+    this.serija = 'neutral';
+    this.plan = 'neutral';
+    this.serija = this.route.snapshot.queryParams.serija;
+    this.plan = this.route.snapshot.queryParams.plan;
+  }
+
 
 }

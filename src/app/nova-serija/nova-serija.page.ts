@@ -13,6 +13,7 @@ import {environment} from "../../environments/environment";
 import {Cisterna} from "../cisterna";
 import {SerijaService} from "../serija.service";
 import {NgForm} from "@angular/forms";
+import {LoadingController} from "@ionic/angular";
 
 @Component({
   selector: 'app-nova-serija',
@@ -36,24 +37,30 @@ export class NovaSerijaPage implements OnInit {
   constructor(private proizvodiSerijeServis: ProizvodSerijeService, private artiklSerijeServis: ArtiklSerijeService,
               private cisterneSerijeServis: CisternaSerijeService, private route: ActivatedRoute,
               private serijaServis: SerijaService, private planoviServis: PlanoviService,
-              private router: Router) {
+              private router: Router, private loadingController: LoadingController) {
 
   }
 
+  ionViewWillEnter() {
+    this.loadingController.create({message: 'Molimo sacekajte...'}).then((loading) => {
+      loading.present();
+      this.serijaServis.pokreniUnos().subscribe(() => {
+        console.log("Uspesno pokrenut unos");
+        this.planoviServis.uzmiSve().subscribe((planovi: any) => {
+          this.IDPlanova = planovi.planProizvodnjeSerije;
+          console.log(planovi.planProizvodnjeSerije);
+          loading.dismiss();
+        }, error => {
+
+        });
+      }, error => {
+        console.log("Greska prilikom pokretanja unosa");
+      });
+    })
+  }
+
+
   ngOnInit() {
-    this.serijaServis.pokreniUnos().subscribe(() => {
-      console.log("Uspesno pokrenut unos");
-    }, error => {
-      console.log("Greska prilikom pokretanja unosa");
-    });
-
-    this.ucitajSvePodatke();
-    this.planoviServis.uzmiSve().subscribe((planovi: any) => {
-      this.IDPlanova = planovi.planProizvodnjeSerije;
-      console.log(planovi.planProizvodnjeSerije);
-    }, error => {
-
-    });
 
   }
 
@@ -94,7 +101,9 @@ export class NovaSerijaPage implements OnInit {
   }
 
   ukloniProizvodSerije(idArtikla: number, idNalepnice: number){
-    this.proizvodiSerijeServis.ukloniProizvodSerije(idArtikla, idNalepnice);
+    this.proizvodiSerijeServis.ukloniProizvodSerije(idArtikla, idNalepnice).subscribe(()=>{
+      this.ucitajSvePodatke();
+    });
   }
 
   izborCisterne() {

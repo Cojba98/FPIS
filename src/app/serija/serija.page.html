@@ -15,7 +15,7 @@
     <ion-item>
       <ion-label>Izaberite seriju:</ion-label>
       <ion-select ngModel name="serija" #serija="ngModel" (ionChange)="izborSerije(serija.value)">
-        <ion-select-option *ngFor="let lot of lotovi" value="{{lot.LOT}}">{{lot.LOT}}</ion-select-option>
+        <ion-select-option *ngFor="let lot of lotovi" value="{{lot}}">{{lot}}</ion-select-option>
       </ion-select>
     </ion-item>
     <div *ngIf="serija.value">

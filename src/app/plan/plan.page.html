@@ -11,24 +11,29 @@
 
 <ion-content>
   <form #PlanForm="ngForm" (ngSubmit)="sacuvajPlan()">
-    <ion-label>ID plana proizvodnje serije: {{IDPlana}}</ion-label>
+    <ion-label>Izaberite ID plana koji zelite da izmenite:</ion-label>
+    <ion-select name="idPlana" [(ngModel)]="idPlana" (ionChange)="izborPlana()">
+      <ion-select-option *ngFor="let plan of IDPlanova" value="{{plan.IDPlanaSerije}}">{{plan.IDPlanaSerije}}</ion-select-option>
+    </ion-select>
     <div>
       <ion-grid>
         <ion-row color="primary">
-          <ion-col size="1"><ion-item color="primary" lines="inset">Sifra proizvoda</ion-item></ion-col>
+          <ion-col size="1.5"><ion-item color="primary" lines="inset">Sifra proizvoda</ion-item></ion-col>
           <ion-col size="3"><ion-item color="primary">Naziv proizvoda</ion-item></ion-col>
-          <ion-col size="1"><ion-item color="primary">Sifra nalepnice</ion-item></ion-col>
+          <ion-col size="1.5"><ion-item color="primary">Sifra nalepnice</ion-item></ion-col>
           <ion-col><ion-item color="primary">Opis nalepnice</ion-item></ion-col>
-          <ion-col size="1"><ion-item color="primary">Kolicina</ion-item></ion-col>
+          <ion-col size="1.5"><ion-item color="primary">Kolicina</ion-item></ion-col>
           <ion-col size="1"><ion-item color="danger">Ukloni</ion-item></ion-col>
+          <ion-col size="1"><ion-item color="warning">Izmeni</ion-item></ion-col>
         </ion-row>
-        <ion-row *ngFor="let planiraniProizvodSerije of proizvodiSerije">
-          <ion-col size="1">{{planiraniProizvodSerije.sp.IDArtikla}}</ion-col>
+        <ion-row *ngFor="let planiraniProizvodSerije of planiraniProizvodi">
+          <ion-col size="1.5">{{planiraniProizvodSerije.sp.IDArtikla}}</ion-col>
           <ion-col size="3">{{planiraniProizvodSerije.sp.nazivArtikla}}</ion-col>
-          <ion-col size="1">{{planiraniProizvodSerije.n.IDNalepnice}}</ion-col>
+          <ion-col size="1.5">{{planiraniProizvodSerije.n.IDNalepnice}}</ion-col>
           <ion-col>{{planiraniProizvodSerije.n.opis}}</ion-col>
-          <ion-col size="1"><ion-input value="{{planiraniProizvodSerije.kolicina}}" (change)="postaviKolicinuProizvodaSerije(planiraniProizvodSerije.sp.IDArtikla,planiraniProizvodSerije.n.IDNalepnice,$event)"></ion-input></ion-col>
-          <ion-col size="1"><ion-button color="danger" (click)="ukloniProizvodSerije(planiraniProizvodSerije.sp.IDArtikla, planiraniProizvodSerije.n.IDNalepnice)"><ion-icon name="trash"></ion-icon></ion-button></ion-col>
+          <ion-col size="1.5"><ion-input value="{{planiraniProizvodSerije.kolicina}}" (change)="postaviKolicinuProizvodaSerije(planiraniProizvodSerije.sp.IDArtikla,planiraniProizvodSerije.n.IDNalepnice,$event)"></ion-input></ion-col>
+          <ion-col size="1"><ion-button color="danger" (click)="ukloniPlaniraniProizvodSerije(planiraniProizvodSerije.sp.IDArtikla, planiraniProizvodSerije.n.IDNalepnice)"><ion-icon name="trash"></ion-icon></ion-button></ion-col>
+          <ion-col size="1"><ion-button color="warning" (click)="izmeniPlaniraniProizvodSerije(planiraniProizvodSerije.sp.IDArtikla, planiraniProizvodSerije.n.IDNalepnice, planiraniProizvodSerije.kolicina)"><ion-icon name="create-outline"></ion-icon></ion-button></ion-col>
         </ion-row>
       </ion-grid>
       <br>
@@ -37,41 +42,44 @@
           <ion-col size="1"><ion-item color="primary" lines="inset">Sifra artikla</ion-item></ion-col>
           <ion-col><ion-item color="primary">Naziv artikla</ion-item></ion-col>
           <ion-col size="1"><ion-item color="primary">Kolicina</ion-item></ion-col>
-          <ion-col size="1"><ion-item color="danger">Ukloni</ion-item></ion-col>
         </ion-row>
-        <ion-row *ngFor="let artiklSerije of artikliSerije">
+        <ion-row *ngFor="let artiklSerije of artikliZaSeriju">
           <ion-col size="1">{{artiklSerije.artikl.IDArtikla}}</ion-col>
           <ion-col >{{artiklSerije.artikl.nazivArtikla}}</ion-col>
-          <ion-col size="1"><ion-label value="{{artiklSerije.kolicina}}"></ion-label> </ion-col>
+          <ion-col size="1"><ion-label>{{artiklSerije.kolicina}}</ion-label> </ion-col>
         </ion-row>
       </ion-grid>
       <br>
-      <ion-grid>
-        <ion-row color="primary">
-          <ion-col size="2"><ion-item color="primary" lines="inset">ID citerne</ion-item></ion-col>
-          <ion-col><ion-item color="primary">Datum</ion-item></ion-col>
-          <ion-col><ion-item color="primary">Kolicina mleka u cisterni</ion-item></ion-col>
-          <ion-col><ion-item color="primary">Utrosena kolicina</ion-item></ion-col>
-          <ion-col size="1"><ion-item color="danger">Ukloni</ion-item></ion-col>
+      <ion-label id="potrebnoMleko">Potrebna kolicina mleka: {{mleko}}</ion-label>
+      <ion-buttons id="dodavanje" slot="end">
+        <ion-fab-button size="large" color="primary" (click)="openModal()">
+          <ion-icon name="add"></ion-icon>
+        </ion-fab-button>
+        <ion-label color="primary">Dodaj novi planirani proizvod serije</ion-label>
+      </ion-buttons>
+      <ion-grid id="sacuvaj">
+        <ion-row class="ion-justify-content-center">
+          <ion-button [style]="{'width': '250px', 'height':'80px', 'font-size':'20px'}" color="success" type="submit">Sacuvaj plan</ion-button>
         </ion-row>
       </ion-grid>
       <br>
-<!--      <ion-grid *ngIf="dodavanje===true">-->
-<!--        <ion-row >-->
-<!--          <ion-col size="2">-->
-<!--            <ion-select [(ngModel)]="idCisterne"  ngModel name="idCis" #idCis="ngModel" (ionChange)="izborCisterne()" required>-->
-<!--              <ion-select-option *ngFor="let cisterna of cisterne" required>{{cisterna.IDCisterne}}</ion-select-option>-->
-<!--            </ion-select>-->
-<!--          </ion-col>-->
-<!--          <ion-col *ngIf="idCisterne">{{datumCisterne | date: 'dd/MMMM/yyyy'}}</ion-col>-->
-<!--          <ion-col *ngIf="idCisterne">{{ukupnoMleko}}</ion-col>-->
-<!--          <ion-col><ion-input type="text" ngModel name="mleko" #mleko="ngModel" [(ngModel)]="kolicinaMleka"  (change)="unosKolicine()"  placeholder="Unesite utrosenu kolicinu mleka" required></ion-input></ion-col>-->
-<!--        </ion-row>-->
-<!--      </ion-grid>-->
-<!--      <ion-button color="primary" *ngIf="dodavanje===true" (click)="ubaciCisternuUKolekciju()">Ubaci u kolekciju</ion-button>-->
-<!--      <ion-button *ngIf="dodavanje===false" color="secondary" (click)="dodajCisternu()">Dodaj cisternu</ion-button>-->
-<!--      <br>-->
-<!--      <ion-button color="success" type="submit" [disabled]="SerijaForm.invalid">Sacuvaj seriju</ion-button>-->
+      <!--      <ion-grid *ngIf="dodavanje===true">-->
+      <!--        <ion-row >-->
+      <!--          <ion-col size="2">-->
+      <!--            <ion-select [(ngModel)]="idCisterne"  ngModel name="idCis" #idCis="ngModel" (ionChange)="izborCisterne()" required>-->
+      <!--              <ion-select-option *ngFor="let cisterna of cisterne" required>{{cisterna.IDCisterne}}</ion-select-option>-->
+      <!--            </ion-select>-->
+      <!--          </ion-col>-->
+      <!--          <ion-col *ngIf="idCisterne">{{datumCisterne | date: 'dd/MMMM/yyyy'}}</ion-col>-->
+      <!--          <ion-col *ngIf="idCisterne">{{ukupnoMleko}}</ion-col>-->
+      <!--          <ion-col><ion-input type="text" ngModel name="mleko" #mleko="ngModel" [(ngModel)]="kolicinaMleka"  (change)="unosKolicine()"  placeholder="Unesite utrosenu kolicinu mleka" required></ion-input></ion-col>-->
+      <!--        </ion-row>-->
+      <!--      </ion-grid>-->
+      <!--      <ion-button color="primary" *ngIf="dodavanje===true" (click)="ubaciCisternuUKolekciju()">Ubaci u kolekciju</ion-button>-->
+      <!--      <ion-button *ngIf="dodavanje===false" color="secondary" (click)="dodajCisternu()">Dodaj cisternu</ion-button>-->
+      <!--      <br>-->
+      <!--      <ion-button color="success" type="submit" [disabled]="SerijaForm.invalid">Sacuvaj seriju</ion-button>-->
     </div>
+
   </form>
 </ion-content>

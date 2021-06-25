@@ -14,11 +14,15 @@ export class PlanoviService {
     let url = environment.apiUrl+ 'planoviProizvodnjeSerije';
     console.log("Uzimanje planova");
     return this.http.get<any>(url);
-    console.log("Planovi uzeti");
   }
 
   izborPlana(value: number) {
     let url = environment.apiUrl+ 'planoviProizvodnjeSerije/plan/' + value;
+    return this.http.get(url);
+  }
+
+  pokreniUnos() {
+    let url = environment.apiUrl + 'pokreniUnosPlana';
     return this.http.get(url);
   }
 }

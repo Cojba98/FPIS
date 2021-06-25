@@ -10,6 +10,7 @@ import {SerijaService} from "../serija.service";
 import {PlanoviService} from "../planovi.service";
 import {NgForm} from "@angular/forms";
 import {Serija} from "../serija";
+import {LoadingController} from "@ionic/angular";
 
 @Component({
   selector: 'app-serija',
@@ -29,36 +30,44 @@ export class SerijaPage implements OnInit {
   IDPlanova: number[];
   datumCisterne: any;
   ukupnoMleko: number;
-  lotovi: Serija[];
+  lotovi: string[];
 
   constructor(private proizvodiSerijeServis: ProizvodSerijeService, private artiklSerijeServis: ArtiklSerijeService,
               private cisterneSerijeServis: CisternaSerijeService, private route: ActivatedRoute,
               private serijaServis: SerijaService, private planoviServis: PlanoviService,
-              private router: Router) {
+              private router: Router, private loadingController: LoadingController) {
 
   }
 
+
+  ionViewWillEnter(){
+    this.loadingController.create({message: 'Molimo sacekajte...'}).then((loading) => {
+      loading.present();
+
+
+
+      this.serijaServis.pokreniUnos().subscribe(() => {
+        console.log("Uspesno pokrenut unos");
+        this.ucitajSvePodatke();
+        this.serijaServis.vratiLotove().subscribe(()=>{
+          this.serijaServis.uzmiLotove.subscribe((lotovi)=>{
+            this.lotovi = lotovi;
+            console.log("Lotovi:")
+            console.log(this.lotovi);
+          })
+        })
+        loading.dismiss();
+      }, error => {
+        console.log("Greska prilikom pokretanja unosa");
+      });
+    })
+
+
+
+  }
+
+
   ngOnInit() {
-
-    this.serijaServis.vratiLotove().subscribe((lotovi) =>{
-      this.lotovi = lotovi.serija;
-      console.log("Lotovi:")
-      console.log(this.lotovi);
-    });
-
-    this.serijaServis.pokreniUnos().subscribe(() => {
-      console.log("Uspesno pokrenut unos");
-    }, error => {
-      console.log("Greska prilikom pokretanja unosa");
-    });
-
-    this.ucitajSvePodatke();
-    this.planoviServis.uzmiSve().subscribe((planovi: any) => {
-      this.IDPlanova = planovi.planProizvodnjeSerije;
-      console.log(planovi.planProizvodnjeSerije);
-    }, error => {
-
-    });
 
   }
 
@@ -99,7 +108,9 @@ export class SerijaPage implements OnInit {
   }
 
   ukloniProizvodSerije(idArtikla: number, idNalepnice: number){
-    this.proizvodiSerijeServis.ukloniProizvodSerije(idArtikla, idNalepnice);
+    this.proizvodiSerijeServis.ukloniProizvodSerije(idArtikla, idNalepnice).subscribe(()=>{
+      this.ucitajSvePodatke();
+    });
   }
 
   izborCisterne() {

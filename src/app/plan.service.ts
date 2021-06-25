@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {environment} from '../environments/environment';
 import {Plan} from './plan';
 import {PlaniraniProizvodSerije} from "./planirani-proizvod-serije";
@@ -16,6 +16,13 @@ export class PlanService {
 
   url = environment.apiUrl + 'planoviProizvodnjeSerije/plan/';
   url2 = environment.apiUrl + 'plan/';
+
+  _planiraniProizvodi = new BehaviorSubject<PlaniraniProizvodSerije[]>([]);
+
+  get planiraniProizvodi(){
+    return this._planiraniProizvodi;
+  }
+
 
   uzmiSve(): Observable<Plan>{
     return this.http.get<Plan>(this.url);
@@ -79,4 +86,26 @@ export class PlanService {
     let url = this.url2 +'ukloniPlaniraniProizvod?IDArtikla='+IDArtikla +"&IDNalepnice=" + IDNalepnice;
     return this.http.get(url);
   }
+
+  izborPlana(id: number) {
+   let url = this.url2 +'izborPlana/'+id;
+   return this.http.get(url);
+  }
+
+  promeniKolicinu(IDArtikla: number, IDNalepnice: number, kolicina: number) {
+    let url = this.url2 + 'proizvod';
+    return this.http.post(url, {'IDArtikla': IDArtikla, 'IDNalepnice': IDNalepnice, 'kolicina':kolicina});
+  }
+
+  vratiKolicinuMleka() {
+    let url = this.url2 + 'izracunajPotrebnoMleko';
+    return this.http.get(url);
+  }
+
+  pripremiProizvodZaIzmenu(IDArtikla, IDNalepnice) {
+    let url = this.url2 + 'pripremiZaIzmenu?IDArtikla='+IDArtikla+'&IDNalepnice='+IDNalepnice;
+    return this.http.get(url);
+  }
+
+
 }

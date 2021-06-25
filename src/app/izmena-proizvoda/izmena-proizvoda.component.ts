@@ -9,25 +9,26 @@ import {PlanService} from "../plan.service";
 import {NoviPlanPage} from "../novi-plan/novi-plan.page";
 
 @Component({
-  selector: 'app-dodavanje-proizvoda',
-  templateUrl: './dodavanje-proizvoda.component.html',
-  styleUrls: ['./dodavanje-proizvoda.component.scss'],
+  selector: 'app-izmena-proizvoda',
+  templateUrl: './izmena-proizvoda.component.html',
+  styleUrls: ['./izmena-proizvoda.component.scss'],
 })
-export class DodavanjeProizvodaComponent implements OnInit, OnDestroy {
+export class IzmenaProizvodaComponent implements OnInit {
 
   proizvodi: SopstveniProizvod[] = [];
   nalepnice: Nalepnica[] = [];
   idProizvoda: any;
   idNalepnice: any;
   kolicina: any;
+
   @Input() roditelj: NoviPlanPage;
 
   constructor(private proizvodiServis: SopstveniproizvodService, private nalepniceService: NalepniceService, private modalKontroler: ModalController,
               private planServis: PlanService) { }
 
   ngOnInit() {
+  console.log('NG init izmena');
 
-    this.planServis.kreirajNoviProizvod().subscribe(()=>{
       this.proizvodiServis.uzmiSve().subscribe((proizvodi: SopstveniProizvod[])=>{
         // @ts-ignore
         if(proizvodi.sopstveniProizvod && proizvodi.sopstveniProizvod.length <2){
@@ -37,7 +38,6 @@ export class DodavanjeProizvodaComponent implements OnInit, OnDestroy {
           // @ts-ignore
           this.proizvodi = proizvodi.sopstveniProizvod;
         }
-      })
 
       this.nalepniceService.uzmiSve().subscribe((nalepnice)=>{
         // @ts-ignore
@@ -56,16 +56,6 @@ export class DodavanjeProizvodaComponent implements OnInit, OnDestroy {
 
   }
 
-  dodajProizvod() {
-    this.planServis.dodajProizvod().subscribe(()=>{
-      this.idProizvoda = undefined;
-      this.idNalepnice = undefined;
-      this.kolicina = undefined;
-      this.planServis.kreirajNoviProizvod().subscribe(()=>{
-
-      })
-    });
-  }
 
   postaviProizvod(){
     if(this.idProizvoda) {
@@ -92,15 +82,16 @@ export class DodavanjeProizvodaComponent implements OnInit, OnDestroy {
   }
 
   zatvoriFormu() {
-    //this.planServis.sacuvajIzmene().subscribe(() =>{
+ //   this.planServis.sacuvajIzmene().subscribe(() =>{
       this.modalKontroler.dismiss();
-   // })
+  //  })
 
   }
 
   ngOnDestroy(){
     this.roditelj.preuzmiPlaniraneProizvode();
   }
+
 
 
 
